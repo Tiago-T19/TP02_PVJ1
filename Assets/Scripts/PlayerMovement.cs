@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -30,10 +31,32 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private LayerMask groundLayer;
 
+    [Header("Invisibility")]
+    
+
+    // Variable que indica si el jugador está invisible
+    private bool isInvisible = false;
+    private Renderer[] renderers;
+    private Color[] coloresOriginales;
+
+    // Permite consultar desde otros scripts
+    public bool IsInvisible
+    {
+        get { return isInvisible; }
+    }
+
+
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        renderers = GetComponentsInChildren<Renderer>();
+        coloresOriginales = new Color[renderers.Length];
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            coloresOriginales[i] = renderers[i].material.color;
+        }
     }
 
     void Update()
@@ -55,7 +78,6 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 movement = (transform.forward * moveVertical + transform.right * moveHorizontal).normalized;
         rb.linearVelocity = new Vector3(movement.x * speed, rb.linearVelocity.y, movement.z * speed);
-      
     }
     private void CheckGround()
     {
@@ -72,5 +94,47 @@ public class PlayerMovement : MonoBehaviour
         transform.rotation = Quaternion.Euler(0f, rotateY, 0f);
     }
 
+    //---------------------------------------------------
+    // POWER UP DE INVISIBILIDAD
+    //---------------------------------------------------
+
+    public void ActivarInvisibilidad(float duracion)
+    {
+        // Reinicia la corrutina si el jugador toma otro powerup
+        StopCoroutine("InvisibilityRoutine");
+        StartCoroutine(InvisibilityRoutine(duracion));
+    }
+
+    private System.Collections.IEnumerator InvisibilityRoutine(float duracion)
+    {
+        isInvisible = true;
+
+        Debug.Log("Invisibilidad activada");
+
+        // Hace al jugador blanco simulando ser invisible
+        foreach (Renderer rend in renderers)
+        {
+            if (rend.material.HasProperty("_Color"))
+            {
+                rend.material.color = Color.blue;
+            }
+        }
+
+        // Espera la duración indicada
+        yield return new WaitForSeconds(duracion);
+
+        isInvisible = false;
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            if (renderers[i].material.HasProperty("_Color"))
+            {
+                renderers[i].material.color = coloresOriginales[i];
+            }
+        }
+        Debug.Log("Invisibilidad terminada");
+    }
+
 
 }
+
