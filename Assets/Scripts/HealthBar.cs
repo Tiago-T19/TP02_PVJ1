@@ -24,7 +24,6 @@ public class HealthBar : MonoBehaviour
         rellenoBarraVida.fillAmount =
             healthSystem.CurrentHealth / healthSystem.MaxHealth;
 
-        textoVida.text =
-            $"{healthSystem.CurrentHealth:0}/{healthSystem.MaxHealth:0}";
+      
     }
 }
