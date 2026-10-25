@@ -35,7 +35,7 @@ public class HealthSystem : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         col = GetComponent<Collider>();
         attack = GetComponent<Attack>();
-        mesh = GetComponent<MeshRenderer>();
+        mesh = GetComponentInChildren<MeshRenderer>();
     }
     public void TakeDamage(float amount)
     {
@@ -62,11 +62,7 @@ public class HealthSystem : MonoBehaviour
         //clamp permite normalizar un valor de acuerdo a los limites
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
 
-        /*
-         * math.clamp(5, 1, 10) => 5 (esta dentro del rango)
-         * math.clamp(-4, 0, 10) => 0 (es menor que el minimo, devuelve 0)
-         * math.clamp(15, 0, 10) => 10 (es mayor que el maximo, devuelve 10)
-         */
+       
 
         //Debug.Log($"Salud actual: " + currentHealth);
         Debug.Log($"VIDA: {currentHealth}/{maxHealth}");
@@ -116,8 +112,12 @@ public class HealthSystem : MonoBehaviour
 
     private void Dead()
     {
+        Debug.Log("ENTRO A DEAD");
+
         isDead = true;
 
+        Destroy(gameObject);
+    
         //agregar condicional comparando tags player y character, notificar al gameManager
 
         if (gameObject.CompareTag("Player"))
@@ -129,10 +129,7 @@ public class HealthSystem : MonoBehaviour
             GameManager.Instance.NotifyEnemyDefeat();
         }
 
-       /* vfx.SetActive(true);
-        //activar vfx
-        StartCoroutine(DestroyTransition());
-        //iniciar Corrutina*/
+       
 
 
         Debug.Log("Character eliminado");
@@ -145,22 +142,25 @@ public class HealthSystem : MonoBehaviour
 
     IEnumerator DestroyTransition()
     {
-        col.enabled = false;
-        rb.isKinematic = true;
-        mesh.enabled = false;
+        if (col != null)
+            col.enabled = false;
 
-        if (attack != null)
-        {
-            attack.enabled = false;
-        }
+        if (rb != null)
+            rb.isKinematic = true;
 
         if (mesh != null)
-        {
             mesh.enabled = false;
-        }
-        yield return new WaitForSeconds(5f);
 
-        Destroy(this.gameObject);
+        if (attack != null)
+            attack.enabled = false;
+
+        Debug.Log("Iniciando destruccion");
+
+        yield return new WaitForSeconds(1f);
+
+        Debug.Log("Destruyendo objeto");
+
+        Destroy(gameObject);
     }
     //crear corrutina deshabilitando componentes y destruyendo el objeto
 

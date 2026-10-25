@@ -191,9 +191,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99119cd9deb8e6040991dd4af6ee47d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Attack
-  gun: {fileID: 0}
-  rayDistance: 0
-  offsetGun: {x: 0, y: 0, z: 0}
   sword: {fileID: 7873626638960382318}
   radius: 0.8
   offsetSword: {x: -0.3, y: 0.77, z: 0}
@@ -232,8 +229,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthSystem
   maxHealth: 200
-  isDead: 0
-  vfx: {fileID: 0}
+  isDead: 1
 --- !u!4 &7876646714841925442 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4283527512771772, guid: e332982425ee2ec48b168979bb7b43f5, type: 3}

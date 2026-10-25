@@ -2,49 +2,14 @@ using UnityEngine;
 
 public class GoalZone : MonoBehaviour
 {
-    [SerializeField] private Transform goal;
-
-
     private void OnTriggerEnter(Collider other)
     {
+        // Verifica que quien entró sea el jugador
         if (other.CompareTag("Player"))
         {
-            PickItem pickItem = other.GetComponent<PickItem>();
+            Debug.Log("META ALCANZADA");
 
-            if(pickItem!=null)
-            {
-                GameObject item = pickItem.DropItem();
-
-                if(item!=null)
-                {
-                    //meta -> Victoria
-                    ItemInZone(item);
-
-                    Debug.Log("Completaste el nivel");
-                }
-                else
-                {
-                    Debug.Log("Derrota o LLego a la meta pero sin el item");
-                    //Derrota o LLego a la meta pero sin el item
-                }
-            }
+            GameManager.Instance.NotifyGoalZone();
         }
-    }
-
-
-    private void ItemInZone(GameObject item)
-    {
-        item.transform.SetParent(goal);
-        item.transform.localPosition = Vector3.zero;
-        item.transform.localRotation = Quaternion.identity;
-
-        Collider col = item.GetComponent<Collider>();
-        Rigidbody rb = item.GetComponent<Rigidbody>();
-
-        if(col!=null) col.enabled = true;
-        if(rb!=null) rb.isKinematic = false;
-
-
-
     }
 }
