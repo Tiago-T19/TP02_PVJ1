@@ -4,11 +4,11 @@ using UnityEngine.AI;
 
 public class Attack : MonoBehaviour
 {
-    [Header("Raycast Shoot Settings")]
+  /*  [Header("Raycast Shoot Settings")]
     [SerializeField] private Transform gun;
     [SerializeField] private float rayDistance;
     [SerializeField] private Vector3 offsetGun;
-
+  */
     [Header("Raycast Shoot Settings")]
     [SerializeField] private Transform sword;
     [SerializeField] private float radius;
@@ -46,10 +46,10 @@ public class Attack : MonoBehaviour
                     Melee();
 
                 }
-                else
+                /*else
                 {
                     Shoot();
-                }
+                }*/
 
             }
         }
@@ -74,7 +74,7 @@ public class Attack : MonoBehaviour
 
     }
 
-    public void Shoot()
+   /* public void Shoot()
     {
 
         RaycastInfo(offsetGun);
@@ -86,7 +86,7 @@ public class Attack : MonoBehaviour
 
         }
         StartCoroutine(AttackCooldown());
-    }
+    }*/
 
     public void Melee()
     {

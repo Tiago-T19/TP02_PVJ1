@@ -23,6 +23,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private EnemyAI[] enemies;
     [SerializeField] private int totalEnemies;
     [SerializeField] private int enemiesRemaining;
+    //Puntaje
+    [Header("Score")]
+    [SerializeField] private int score;
 
     //singleton
     private void Awake()
@@ -37,15 +40,24 @@ public class GameManager : MonoBehaviour
         }
         DontDestroyOnLoad(gameObject);//UI y escenas
     }
-    void Start()
-    {
+
         //estados iniciales
         //EnemyAI[] enemies = FindObjectsByType<EnemyAI>(FindObjectsSortMode.None);
+     void Start()
+    {
+        // Busca automáticamente todos los enemigos de la escena
+        enemies = FindObjectsByType<EnemyAI>(FindObjectsSortMode.None);
+
         totalEnemies = enemies.Length;
         enemiesRemaining = totalEnemies;
+
+        score = 0;
+
+        Debug.Log($"Enemigos encontrados: {totalEnemies}");
+        Debug.Log($"PUNTAJE: {score}");
+
         ChangeState(GameState.Playing);
     }
-
     void Update()
     {
         //pausa inputs
@@ -99,6 +111,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void AddScore(int points)
+    {
+        score += points;
+
+        Debug.Log($"<color=yellow>PUNTAJE: {score}</color>");
+    }
+
     //notificaciones
     public void NotifyPlayerDead()
     {
@@ -113,10 +132,10 @@ public class GameManager : MonoBehaviour
 
         enemiesRemaining--;
 
-        if (enemiesRemaining <= 0)
-        {
-            ChangeState(GameState.Victory);
-        }
+        score += 100;
+
+        Debug.Log($"PUNTAJE ACTUAL: {score}");
+        Debug.Log($"Enemigos restantes: {enemiesRemaining}");
     }
 
     public void NotifyGoalZone()

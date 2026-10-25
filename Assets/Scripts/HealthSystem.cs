@@ -19,7 +19,7 @@ public class HealthSystem : MonoBehaviour
 
     }
 
-    [SerializeField] private GameObject vfx;
+    // [SerializeField] private GameObject vfx;
 
     private Rigidbody rb;
     private Collider col;
@@ -69,7 +69,7 @@ public class HealthSystem : MonoBehaviour
          */
 
         //Debug.Log($"Salud actual: " + currentHealth);
-        Debug.Log($"Salud actual: {currentHealth}");
+        Debug.Log($"VIDA: {currentHealth}/{maxHealth}");
 
         if (flashCoroutine != null)
         {
@@ -83,6 +83,37 @@ public class HealthSystem : MonoBehaviour
             Dead();
         }
     }
+
+    // Power Up de mascara de gas
+    public void Heal(float amount)
+    {
+        currentHealth += amount;
+        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+
+        Debug.Log($"Curado. Vida actual: {currentHealth}");
+    }
+
+    // Incrementa la vida maxima y cura al personaje con la nueva vida extra    
+    public void IncreaseMaxHealth(float extraHealth)
+    {
+        maxHealth += extraHealth;
+
+        // También cura la nueva vida extra
+        currentHealth = maxHealth;
+
+        Debug.Log($"Vida máxima aumentada a {maxHealth}");
+    }
+
+    // vuelve a la vida normal
+    public void RestoreMaxHealth(float originalMax)
+    {
+        maxHealth = originalMax;
+
+        currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
+
+        Debug.Log($"Vida máxima restaurada a {maxHealth}");
+    }
+
     private void Dead()
     {
         isDead = true;
@@ -98,10 +129,10 @@ public class HealthSystem : MonoBehaviour
             GameManager.Instance.NotifyEnemyDefeat();
         }
 
-        vfx.SetActive(true);
+       /* vfx.SetActive(true);
         //activar vfx
         StartCoroutine(DestroyTransition());
-        //iniciar Corrutina
+        //iniciar Corrutina*/
 
 
         Debug.Log("Character eliminado");
@@ -117,8 +148,16 @@ public class HealthSystem : MonoBehaviour
         col.enabled = false;
         rb.isKinematic = true;
         mesh.enabled = false;
-        attack.enabled = false;
 
+        if (attack != null)
+        {
+            attack.enabled = false;
+        }
+
+        if (mesh != null)
+        {
+            mesh.enabled = false;
+        }
         yield return new WaitForSeconds(5f);
 
         Destroy(this.gameObject);
